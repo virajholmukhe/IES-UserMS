@@ -1,5 +1,6 @@
 package com.ies.UserMS.service;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -11,6 +12,7 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 @Service
 public class JwtService {
@@ -25,8 +27,7 @@ public class JwtService {
         Jwts.parserBuilder().setSigningKey(getSignInKey()).build().parseClaimsJws(token);
     }
 
-    public String generateToken(String email){
-        Map<String, Object> claims = new HashMap<>();
+    public String generateToken(String email, Map<String, Object> claims){
         return createToken(claims, email);
     }
 
@@ -43,5 +44,30 @@ public class JwtService {
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    public String getUserId(String token) {
+        token = token.substring(7);
+        return extractClaim(token, Claims::getSubject);
+    }
+
+    public String getUserType(String token) {
+        token = token.substring(7);
+        return extractClaim(token, Claims::getSubject);
+    }
+
+    private <T> T extractClaim(String token, Function<Claims, T> claimResolver) {
+        final Claims claims = extractAllClaims(token);
+        // System.out.println(claims.toString());
+        return claimResolver.apply(claims);
+    }
+
+    private Claims extractAllClaims(String token) {
+        // System.out.println(token);
+        return Jwts.parserBuilder()
+                .setSigningKey(getSignInKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 }

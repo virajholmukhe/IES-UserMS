@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
@@ -42,28 +44,35 @@ public class UserServiceImpl implements UserService {
             UserEntity userEntity = new UserEntity();
             BeanUtils.copyProperties(userDTO, userEntity);
             UserEntity userEntityResponse = userRepository.save(userEntity);
+            System.out.println("User Created Successfully");
             return emailUtils.sendMailToSendTempPassword(userDTO.getEmail(),  tempPassword);
         } catch (Exception e) {
-            throw new UserMSException(ExceptionConstants.USER_IS_NOT_CREATED.toString());
+//            throw new UserMSException(ExceptionConstants.USER_IS_NOT_CREATED.toString());
+            throw new UserMSException(e.getMessage());
         }
     }
 
     @Override
-    public String generateToken(String email, String password) throws UserMSException {
+    public TokenResponse generateToken(String email, String password) throws UserMSException {
         Optional<UserEntity> userEntityOptional = userRepository.findByEmail(email);
         if(userEntityOptional.isPresent()){
             if(userEntityOptional.get().isPasswordChanged()){
                 if(passwordEncoder.matches(password, userEntityOptional.get().getPassword())){
-                    return jwtService.generateToken(email);
+                    TokenResponse tokenResponse = new TokenResponse();
+                    Map<String, Object> claims = new HashMap<>();
+                    claims.put("role", userEntityOptional.get().getRole());
+                    claims.put("userId", userEntityOptional.get().getUserId());
+                    tokenResponse.setToken(jwtService.generateToken(email, claims));
+                    tokenResponse.setEmail(email);
+                    return tokenResponse;
                 }else{
                     throw new UserMSException(ExceptionConstants.INVALID_PASSWORD.toString());
                 }
             }else{
                 throw new UserMSException(ExceptionConstants.PASSWORD_NOT_AVAILABLE.toString());
             }
-
         }else{
-            throw new UserMSException(ExceptionConstants.EMAIL_NOT_EXIST.toString());
+            throw new UserMSException(ExceptionConstants.EMAIL_NOT_EXISTS.toString());
         }
     }
 
@@ -92,7 +101,7 @@ public class UserServiceImpl implements UserService {
                 throw new UserMSException(ExceptionConstants.INVALID_TEMP_PASSWORD.toString());
             }
         }else{
-            throw new UserMSException(ExceptionConstants.EMAIL_NOT_EXIST.toString());
+            throw new UserMSException(ExceptionConstants.EMAIL_NOT_EXISTS.toString());
         }
     }
 
@@ -106,7 +115,7 @@ public class UserServiceImpl implements UserService {
             userRepository.save(userEntityOptional.get());
             return emailUtils.sendMailToRecoverPassword(email, tempPassword);
         }else {
-            throw new UserMSException(ExceptionConstants.EMAIL_NOT_EXIST.toString());
+            throw new UserMSException(ExceptionConstants.EMAIL_NOT_EXISTS.toString());
         }
     }
 

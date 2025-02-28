@@ -36,7 +36,7 @@ public class ExceptionControllerAdvice {
 	public ResponseEntity<ErrorMessage> userMSExceptionHandler(UserMSException ex){
 		ErrorMessage error = new ErrorMessage();
 		error.setErrorCode(HttpStatus.BAD_REQUEST.value());
-		error.setMessage(ex.getMessage());
+		error.setMessage(environment.getProperty(ex.getMessage()));
 		logger.error(ex.getMessage());
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}

@@ -1,5 +1,6 @@
 package com.ies.UserMS.entity;
 
+import com.ies.UserMS.utils.UserId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,8 +17,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class UserEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer userId;
+    @UserId
+    private String userId;
     private String name;
     private String email;
     private String password;

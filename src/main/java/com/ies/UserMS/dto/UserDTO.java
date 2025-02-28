@@ -11,7 +11,7 @@ import java.time.LocalDate;
 
 @Data
 public class UserDTO {
-    private Integer userId;
+    private String userId;
     @Pattern(regexp = "^[a-zA-Z\\s]*$", message = "{name.pattern.invalid}")
     @Size(min = 3, max = 50, message = "{name.size.invalid}")
     private String name;

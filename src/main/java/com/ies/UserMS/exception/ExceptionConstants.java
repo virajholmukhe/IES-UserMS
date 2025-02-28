@@ -6,7 +6,7 @@ import org.springframework.context.annotation.PropertySource;
 public enum ExceptionConstants {
 
 	EMAIL_ALREADY_USED("email.already.used"),
-	EMAIL_NOT_EXIST("email.not.exist"),
+	EMAIL_NOT_EXISTS("email.not.exists"),
 	INVALID_PASSWORD("password.invalid"),
 	PASSWORD_NOT_AVAILABLE("password.not.available"),
 	INVALID_TEMP_PASSWORD("temp.password.invalid"),

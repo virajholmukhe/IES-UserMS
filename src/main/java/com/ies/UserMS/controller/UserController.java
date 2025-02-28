@@ -2,6 +2,7 @@ package com.ies.UserMS.controller;
 
 import com.ies.UserMS.dto.LoginRequest;
 import com.ies.UserMS.dto.PasswordChangeRequest;
+import com.ies.UserMS.dto.TokenResponse;
 import com.ies.UserMS.dto.UserDTO;
 import com.ies.UserMS.exception.UserMSException;
 import com.ies.UserMS.service.UserService;
@@ -25,7 +26,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/authenticate")
-    public ResponseEntity<String> authenticate(@RequestBody LoginRequest request) throws UserMSException {
+    public ResponseEntity<TokenResponse> authenticate(@RequestBody LoginRequest request) throws UserMSException {
         return new ResponseEntity<>(userService.generateToken(request.getEmail(), request.getPassword()), HttpStatus.OK);
     }
 
