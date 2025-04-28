@@ -1,6 +1,5 @@
 package com.ies.UserMS.utils;
 
-import com.ies.UserMS.repository.UserRepository;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;

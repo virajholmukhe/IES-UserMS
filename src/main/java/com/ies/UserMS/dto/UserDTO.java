@@ -1,6 +1,5 @@
 package com.ies.UserMS.dto;
 
-import com.ies.UserMS.entity.UserEntity;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;

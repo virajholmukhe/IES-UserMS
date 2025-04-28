@@ -2,8 +2,6 @@ package com.ies.UserMS.entity;
 
 import com.ies.UserMS.utils.UserId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;

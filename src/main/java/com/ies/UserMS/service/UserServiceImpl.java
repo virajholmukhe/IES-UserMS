@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
             userDTO.setPasswordChanged(false);
             UserEntity userEntity = new UserEntity();
             BeanUtils.copyProperties(userDTO, userEntity);
-            UserEntity userEntityResponse = userRepository.save(userEntity);
+            userRepository.save(userEntity);
             System.out.println("User Created Successfully");
             return emailUtils.sendMailToSendTempPassword(userDTO.getEmail(),  tempPassword);
         } catch (Exception e) {
@@ -89,7 +89,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public Boolean updatePassword(PasswordChangeRequest passwordChangeRequest) throws UserMSException {
         Optional<UserEntity> userEntityOptional = userRepository.findByEmail(passwordChangeRequest.getEmail());
-        LoginResponse loginResponse = new LoginResponse();
         if(userEntityOptional.isPresent()){
             UserEntity userEntity = userEntityOptional.get();
             if(passwordEncoder.matches(passwordChangeRequest.getTempPassword(), userEntity.getPassword())){
